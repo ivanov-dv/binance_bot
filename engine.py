@@ -1,6 +1,7 @@
 from binance import Client
 
 from config import *
+from monitoring_pairs.get_pairs import Pairs
 from monitoring_pairs.monitoring_pairs import MonitoringPairs
 from monitoring_open_orders.monitoring_open_orders import MonitoringOpenOrders
 
@@ -13,3 +14,5 @@ monitoring_pairs_bot = MonitoringPairs(
 monitoring_open_orders_bot = MonitoringOpenOrders(
     client, mailer, db_client
 )
+
+pairs = Pairs(client)

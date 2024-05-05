@@ -6,7 +6,7 @@ from engine import *
 @logger.catch
 def main():
     db_client.start_and_create_tables()
-    db_client.update_list_pairs(Pairs(client).get_all_pairs())
+    db_client.update_list_pairs(pairs.get_all_pairs())
     mailer.send_email_message(f"{datetime.now()} Запуск", f"{datetime.now()} Запуск")
     logger.trace("Запуск")
     task1 = Thread(target=monitoring_pairs_bot.start_general_monitoring_pairs)
