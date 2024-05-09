@@ -68,7 +68,7 @@ class MonitoringOpenOrders:
                         "Текущая цена": position["markPrice"],
                         "Цена входа": position["entryPrice"],
                         "Цена закрытия(ф)": close_order_value,
-                        "Цена закрытия(п)": max_value * TARGET_RATIO_FOR_OPEN_ORDERS,
+                        "Цена закрытия(п)": round(float(max_value * TARGET_RATIO_FOR_OPEN_ORDERS), 5),
                         "Максимальная цена": max_value
                     }
                 }
