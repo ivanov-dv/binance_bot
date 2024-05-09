@@ -29,7 +29,7 @@ class MonitoringOpenOrders:
 
     def get_max_value_of_klines(self, pair) -> float:
         high_value = []
-        klines = self.client.futures_continous_klines(pair=pair, contractType="PERPETUAL", interval="4h", limit=2)
+        klines = self.client.futures_continous_klines(pair=pair, contractType="PERPETUAL", interval="4h", limit=6)
         for kline in klines:
             high_value.append(float(kline[2]))
         return max(high_value)
