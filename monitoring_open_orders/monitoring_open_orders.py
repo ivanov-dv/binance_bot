@@ -65,8 +65,10 @@ class MonitoringOpenOrders:
             self.status.open_orders_info.update(
                 {
                     position["symbol"]: {
+                        "Текущая цена": position["markPrice"],
                         "Цена входа": position["entryPrice"],
-                        "Цена закрытия": close_order_value,
+                        "Цена закрытия(ф)": close_order_value,
+                        "Цена закрытия(п)": max_value * TARGET_RATIO_FOR_OPEN_ORDERS,
                         "Максимальная цена": max_value
                     }
                 }
