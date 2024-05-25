@@ -30,6 +30,7 @@ class RedisDB:
                                            iterations_count,
                                            open_orders_info_json) -> None:
         data = {
+            "#": name_bot,
             "Открыто позиций": amount_open_positions,
             "Цикл": iterations_count,
             "time_update": datetime.now()
