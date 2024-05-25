@@ -32,11 +32,10 @@ class RedisDB:
         data = {
             "Открыто позиций": amount_open_positions,
             "Цикл": iterations_count,
-            "open_orders_info_json": open_orders_info_json,
             "time_update": datetime.now()
         }
-        serialize_data = pickle.dumps(data)
-        self.connection.set(name_bot, serialize_data)
+        self.connection.set(name_bot, pickle.dumps(data))
+        self.connection.set("open_orders_info_json", pickle.dumps(open_orders_info_json))
 
     def update_list_pairs(self, list_pairs):
         serialize_data = pickle.dumps(list_pairs)
