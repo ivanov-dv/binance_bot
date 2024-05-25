@@ -41,7 +41,8 @@ TARGET_RATIO_FOR_OPEN_ORDERS = 0.87
 
 # DB SETTINGS
 HOST_DB = "127.0.0.1"
-NAME_DB = "name_db"
+PORT_REDIS = 6379
+DATABASE_REDIS = 0
 
-db_client = DB(HOST_DB, os.getenv("DB_USER"), os.getenv("DB_PASSWORD"), NAME_DB, autocommit=True)
+db_client = RedisDB(HOST_DB, PORT_REDIS, DATABASE_REDIS)
 mailer = EmailSMTP(SMTP_SERVER, SMTP_PORT, SENDER, RECIPIENT, os.getenv("MAIL_PASSWORD"))
