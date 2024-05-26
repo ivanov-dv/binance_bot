@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 class StatusMonitoringOpenOrders:
     name: str
     amount_open_positions: int = 0
-    iterations_count: int = 1
     open_orders_info: dict = field(default_factory=dict)
 
 

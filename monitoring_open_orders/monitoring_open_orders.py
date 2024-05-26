@@ -1,4 +1,3 @@
-import json
 import time
 
 from engine import *
@@ -34,15 +33,15 @@ class MonitoringOpenOrders:
             high_value.append(float(kline[2]))
         return max(high_value)
 
-    def get_close_order(self, pair) -> float:
+    def get_close_order(self, pair):
         open_orders = self.client.futures_get_open_orders()
         open_pos = self.client.futures_position_information()
         for i in open_orders:
             if i["symbol"] == pair and i["side"] == "BUY":
-                return float(i["stopPrice"])
+                return round(float(i["stopPrice"]), 5)
         for position in open_pos:
             if position["symbol"] == pair:
-                return float(position["markPrice"])
+                return "-"
 
     def update_open_positions_info(self) -> None:
         keys_for_delete = set(self.status.open_orders_info.keys()) - set(self.list_pair_open_positions)
@@ -56,17 +55,18 @@ class MonitoringOpenOrders:
             self.list_pair_open_positions.append(position["symbol"])
             close_order_value = self.get_close_order(position["symbol"])
             max_value = self.get_max_value_of_klines(position["symbol"])
-            if max_value * TARGET_RATIO_FOR_OPEN_ORDERS >= close_order_value:
+            if isinstance(close_order_value, float) and max_value * TARGET_RATIO_FOR_OPEN_ORDERS >= close_order_value:
                 logger.info(f"Требуется корректировка {position['symbol']}")
                 self.mailer.send_email_message(
                     f"Корректировка {position['symbol']}",
                     f"Требуется корректировка {position['symbol']}"
                 )
+                time.sleep(MONITORING_NOTICE_TIMEOUT)
             self.status.open_orders_info.update(
                 {
                     position["symbol"]: {
                         "Текущая цена": position["markPrice"],
-                        "Цена входа": position["entryPrice"],
+                        "Цена входа": round(float(position["entryPrice"]), 5),
                         "Цена закрытия(ф)": close_order_value,
                         "Цена закрытия(п)": round(float(max_value * TARGET_RATIO_FOR_OPEN_ORDERS), 5),
                         "Максимальная цена": max_value
@@ -91,11 +91,9 @@ class MonitoringOpenOrders:
                 self.db.update_monitoring_open_orders_data(
                     self.status.name,
                     self.status.amount_open_positions,
-                    self.status.iterations_count,
-                    json.dumps(self.status.open_orders_info)
+                    self.status.open_orders_info
                 )
 
-                self.status.iterations_count += 1
                 time.sleep(MONITORING_OPEN_ORDERS_TIMEOUT)
 
             except Exception as _ex:

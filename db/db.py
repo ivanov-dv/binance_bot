@@ -15,11 +15,12 @@ class RedisDB:
                                      slave_iteration_count,
                                      target_percent) -> None:
         data = {
+            "#": name_bot,
             "Количество пар": amount_pairs,
             "Цикл": master_iteration_count,
             "Подцикл": slave_iteration_count,
             "MIN процент": target_percent,
-            "time_update": datetime.now()
+            "time_update_1": datetime.now()
         }
         serialize_data = pickle.dumps(data)
         self.connection.set(name_bot, serialize_data)
@@ -27,16 +28,14 @@ class RedisDB:
     def update_monitoring_open_orders_data(self,
                                            name_bot,
                                            amount_open_positions,
-                                           iterations_count,
-                                           open_orders_info_json) -> None:
+                                           open_orders_info) -> None:
         data = {
             "#": name_bot,
             "Открыто позиций": amount_open_positions,
-            "Цикл": iterations_count,
-            "time_update": datetime.now()
+            "time_update_2": datetime.now()
         }
         self.connection.set(name_bot, pickle.dumps(data))
-        self.connection.set("open_orders_info_json", pickle.dumps(open_orders_info_json))
+        self.connection.set("open_orders_info", pickle.dumps(open_orders_info))
 
     def update_list_pairs(self, list_pairs):
         serialize_data = pickle.dumps(list_pairs)
