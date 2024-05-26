@@ -43,3 +43,7 @@ class RedisDB:
 
     def get_list_pairs(self):
         return pickle.loads(self.connection.get("list_pairs"))
+
+    def set_key(self, key, value):
+        self.connection.set(key, value)
+
