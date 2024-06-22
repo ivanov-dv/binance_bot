@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from loguru import logger
 from datetime import datetime
 
-from db.db import DB
+from db.db import RedisDB
 from utils.mailer import EmailSMTP
 
 
@@ -32,9 +32,10 @@ SMTP_SERVER = "smtp.mail.com"
 SMTP_PORT = 465
 
 # BOT SETTINGS
-TARGET_PERCENT = 10
+TARGET_PERCENT = 28
 MONITORING_TIMEOUT = 120
-MONITORING_OPEN_ORDERS_TIMEOUT = 30
+MONITORING_OPEN_ORDERS_TIMEOUT = 1
+MONITORING_NOTICE_TIMEOUT = 1
 TRY_TIMEOUT_IF_EXCEPT = 15
 AMOUNT_GENERAL_ITERATIONS = 100
 TARGET_RATIO_FOR_OPEN_ORDERS = 0.87
