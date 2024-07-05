@@ -1,7 +1,7 @@
 import pickle
 import redis
 
-from config import *
+from datetime import datetime
 
 
 class RedisDB:
@@ -46,4 +46,3 @@ class RedisDB:
 
     def set_key(self, key, value):
         self.connection.set(key, value)
-

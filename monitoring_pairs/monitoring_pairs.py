@@ -5,12 +5,7 @@ from status import StatusMonitoringPairs
 
 
 class MonitoringPairs:
-    def __init__(self,
-                 client_bot,
-                 mailer_client,
-                 db,
-                 target_percent,
-                 general_amount_iterations):
+    def __init__(self, client_bot, mailer_client, db, target_percent, general_amount_iterations):
         self.client = client_bot
         self.mailer = mailer_client
         self.db = db
@@ -31,13 +26,6 @@ class MonitoringPairs:
             try:
                 prices = self.client.futures_ticker(symbol=pair)
                 fact_percent_change = float(prices['priceChangePercent'])
-                if fact_percent_change > self.target_percent:
-                    logger.info(f"Изменение {pair} на {prices['priceChangePercent']}%")
-                    self.list_pairs.remove(pair)
-                    self.mailer.send_email_message(
-                        f"{pair} больше {self.target_percent}% ({fact_percent_change}%)",
-                        f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
-                    )
             except KeyError:
                 logger.trace(f'Некорректная пара. Удаление {pair} из списка')
                 self.list_pairs.remove(pair)
@@ -46,6 +34,14 @@ class MonitoringPairs:
                 logger.error(f'Ошибка {_ex}. Повтор через {TRY_TIMEOUT_IF_EXCEPT} секунд')
                 time.sleep(TRY_TIMEOUT_IF_EXCEPT)
                 continue
+            else:
+                if fact_percent_change > self.target_percent:
+                    logger.info(f"Изменение {pair} на {prices['priceChangePercent']}%")
+                    self.list_pairs.remove(pair)
+                    self.mailer.send_email_message(
+                        f"{pair} больше {self.target_percent}% ({fact_percent_change}%)",
+                        f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
+                    )
         self.status.slave_iteration_count += 1
         self.status.amount_pairs = len(self.list_pairs)
 

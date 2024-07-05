@@ -58,10 +58,6 @@ class MonitoringOpenOrders:
             if isinstance(close_order_value, float) and max_value * TARGET_RATIO_FOR_OPEN_ORDERS >= close_order_value:
                 db_client.set_key("notice", "1")
                 logger.info(f"Требуется корректировка {position['symbol']}")
-                # self.mailer.send_email_message(
-                #     f"Корректировка {position['symbol']}",
-                #     f"Требуется корректировка {position['symbol']}"
-                # )
                 time.sleep(MONITORING_NOTICE_TIMEOUT)
             self.status.open_orders_info.update(
                 {

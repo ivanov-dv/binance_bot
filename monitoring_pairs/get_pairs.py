@@ -20,12 +20,6 @@ class Pairs:
             if symbol['symbol'].endswith('USDT'):
                 self.symbols_with_usdt.append(symbol['symbol'])
 
-    def _write_results_in_file(self):
-        f = open('list.txt', 'w')
-        for symbol in self.final_symbols_more_6m:
-            f.write(symbol + '\n')
-        f.close()
-
     def get_one_pair(self, symbol_name):
         klines = self.client.futures_historical_klines(symbol=symbol_name, interval='1M', start_str=1644308894652)
         if len(klines) > 6:
