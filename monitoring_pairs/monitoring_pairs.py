@@ -43,10 +43,10 @@ class MonitoringPairs:
                         f"{pair} больше {self.target_percent}% ({fact_percent_change}%)\n"
                         f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
                     )
-                    self.mailer.send_email_message(
-                        f"{pair} больше {self.target_percent}% ({fact_percent_change}%)",
-                        f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
-                    )
+                    # self.mailer.send_email_message(
+                    #     f"{pair} больше {self.target_percent}% ({fact_percent_change}%)",
+                    #     f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
+                    # )
         self.status.slave_iteration_count += 1
         self.status.amount_pairs = len(self.list_pairs)
 
