@@ -5,9 +5,10 @@ from status import StatusMonitoringPairs
 
 
 class MonitoringPairs:
-    def __init__(self, client_bot, mailer_client, db, target_percent, general_amount_iterations):
+    def __init__(self, client_bot, mailer_client, rabbit_client, db, target_percent, general_amount_iterations):
         self.client = client_bot
         self.mailer = mailer_client
+        self.rabbit = rabbit_client
         self.db = db
         self.target_percent: int = target_percent
         self.general_amount_iterations: int = general_amount_iterations
@@ -38,6 +39,10 @@ class MonitoringPairs:
                 if fact_percent_change > self.target_percent:
                     logger.info(f"Изменение {pair} на {prices['priceChangePercent']}%")
                     self.list_pairs.remove(pair)
+                    self.rabbit.send_message(
+                        f"{pair} больше {self.target_percent}% ({fact_percent_change}%)\n"
+                        f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
+                    )
                     self.mailer.send_email_message(
                         f"{pair} больше {self.target_percent}% ({fact_percent_change}%)",
                         f"{datetime.now()}\nИзменение {pair} на {prices['priceChangePercent']}%"
