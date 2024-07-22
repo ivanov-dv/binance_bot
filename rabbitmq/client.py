@@ -1,4 +1,9 @@
+import time
+
 import pika
+from pika.exceptions import ConnectionClosedByBroker, StreamLostError
+
+from loguru import logger
 
 
 class RabbitMq:
@@ -11,13 +16,30 @@ class RabbitMq:
         self.vhost = vhost
         self.queue_name = queue_name
         self.exchange = exchange
-        self.parameters = pika.URLParameters(f'amqp://{user}:{password}@{host}:{port}')
+        self.parameters = pika.URLParameters(f'amqp://{self.user}:{self.password}@{self.host}:{self.port}')
         self.connection = pika.BlockingConnection(self.parameters)
         self.channel = self.connection.channel()
+        self.channel.queue_declare(queue=self.queue_name, durable=True)
+
+    def reconnect(self):
+        self.parameters = pika.URLParameters(f'amqp://{self.user}:{self.password}@{self.host}:{self.port}')
+        self.connection = pika.BlockingConnection(self.parameters)
+        self.channel = self.connection.channel()
+        self.channel.queue_declare(queue=self.queue_name, durable=True)
 
     def send_message(self, message):
-        self.channel.queue_declare(queue=self.queue_name, durable=True)
-        self.channel.basic_publish(exchange=self.exchange,
-                                   routing_key=self.queue_name,
-                                   body=message,
-                                   properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent))
+        try:
+            self.channel.basic_publish(exchange=self.exchange,
+                                       routing_key=self.queue_name,
+                                       body=message,
+                                       properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent))
+        except ConnectionClosedByBroker:
+            time.sleep(1)
+            logger.error("Connection closed by broker, attempting to reconnect")
+            self.reconnect()
+            self.send_message(message)
+        except StreamLostError:
+            time.sleep(1)
+            logger.error("Stream lost error, attempting to reconnect")
+            self.reconnect()
+            self.send_message(message)
