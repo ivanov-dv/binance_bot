@@ -18,10 +18,10 @@ if os.path.exists(dotenv_path):
 logger.configure(
     handlers=[
         dict(sink=sys.stderr, level=0),
-        dict(sink=f"logs/{datetime.now().strftime('%Y-%m-%d')}.log",
-             rotation="1024 KB",
-             retention=10,
-             compression="zip")
+        # dict(sink=f"logs/{datetime.now().strftime('%Y-%m-%d')}.log",
+        #      rotation="1024 KB",
+        #      retention=10,
+        #      compression="zip")
     ]
 )
 
@@ -41,9 +41,14 @@ AMOUNT_GENERAL_ITERATIONS = 100
 TARGET_RATIO_FOR_OPEN_ORDERS = 0.87
 
 # DB SETTINGS
-HOST_DB = "127.0.0.1"
-PORT_REDIS = 6379
-DATABASE_REDIS = 0
+HOST_REDIS = os.getenv("HOST_REDIS", "localhost")
+PORT_REDIS = os.getenv("PORT_REDIS", 6379)
+DATABASE_REDIS = os.getenv("DATABASE_REDIS", 0)
+PASSWORD_REDIS = os.getenv("PASSWORD_REDIS", "<PASSWORD>")
 
-db_client = RedisDB(HOST_DB, PORT_REDIS, DATABASE_REDIS)
+HOST_RABBIT = os.getenv("HOST_RABBIT", "localhost")
+USER_RABBIT = os.getenv("USER_RABBIT", "user")
+PASSWORD_RABBIT = os.getenv("PASSWORD_RABBIT", "password")
+
+db_client = RedisDB(HOST_REDIS, PORT_REDIS, DATABASE_REDIS, PASSWORD_REDIS)
 mailer = EmailSMTP(SMTP_SERVER, SMTP_PORT, SENDER, RECIPIENT, os.getenv("MAIL_PASSWORD"))
