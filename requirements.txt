@@ -4,3 +4,4 @@ psycopg2-binary~=2.9.9
 python-binance~=1.0.19
 python-dotenv~=1.0.1
 redis~=5.0.4
+sentry-sdk~=2.25.1

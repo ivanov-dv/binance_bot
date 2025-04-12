@@ -1,3 +1,4 @@
+import sentry_sdk
 from binance import Client
 
 from config import *
@@ -19,4 +20,6 @@ monitoring_open_orders_bot = MonitoringOpenOrders(
 
 pairs = Pairs(client)
 
+if SENTRY_DSN:
+    sentry_sdk.init(SENTRY_DSN)
 
