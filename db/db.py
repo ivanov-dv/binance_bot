@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 class RedisDB:
-    def __init__(self, host, port, database):
-        self.connection = redis.Redis(host=host, port=port, db=database)
+    def __init__(self, host, port, database, password):
+        self.connection = redis.Redis(host=host, port=port, db=database, password=password)
 
     def update_monitoring_pairs_data(self,
                                      name_bot,
@@ -46,3 +46,4 @@ class RedisDB:
 
     def set_key(self, key, value):
         self.connection.set(key, value)
+
