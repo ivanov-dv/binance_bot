@@ -18,10 +18,10 @@ if os.path.exists(dotenv_path):
 logger.configure(
     handlers=[
         dict(sink=sys.stderr, level=0),
-        dict(sink=f"logs/{datetime.now().strftime('%Y-%m-%d')}.log",
-             rotation="1024 KB",
-             retention=10,
-             compression="zip")
+        # dict(sink=f"logs/{datetime.now().strftime('%Y-%m-%d')}.log",
+        #      rotation="1024 KB",
+        #      retention=10,
+        #      compression="zip")
     ]
 )
 
