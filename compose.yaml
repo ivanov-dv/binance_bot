@@ -1,0 +1,8 @@
+services:
+  binance_bot:
+    container_name: binance_bot
+    env_file:
+      - .env
+    build:
+      context: .
+    restart: always
