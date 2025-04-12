@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-tgbot
+  labels:
+    app: binance-bot
+spec:
+  selector:
+    matchLabels:
+      app: binance-bot
+  template:
+    metadata:
+      labels:
+        app: binance-bot
+    spec:
+      containers:
+        - name: binance-bot
+          image: binance-bot:latest
+          imagePullPolicy: Never
+          envFrom:
+            - secretRef:
+                name: binance-bot-env
